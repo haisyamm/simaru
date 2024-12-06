@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Room;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class RoomContoller extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::when(request()->search, function ($users) {
-            $users = $users->where('name', 'like', '%' . request()->search . '%');
+        $rooms = Room::when(request()->search, function ($rooms) {
+            $rooms = $rooms->where('name', 'like', '%' . request()->search . '%');
         })->paginate(10);
-        return view('users.index', compact('users'))
+
+        return view('rooms.index', compact('rooms'))
         ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
@@ -24,7 +25,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        //
     }
 
     /**

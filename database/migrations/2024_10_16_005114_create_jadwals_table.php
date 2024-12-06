@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('roomId')->nullable()->index();
+            $table->foreignId('userId')->nullable()->index();
+            $table->date('startDate')->nullable();
+            $table->date('endDate')->nullable();
+            $table->date('bookingDate')->nullable();
+            $table->time('startTime')->nullable();
+            $table->time('endTime')->nullable();
+            
             $table->timestamps();
         });
     }
