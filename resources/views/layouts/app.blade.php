@@ -29,7 +29,17 @@
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+                <div class="px-3 py-3">
+                    @if (session()->has('success'))
+                        <x-toast-success :message="session('success')"></x-toast-success>
+                    @elseif(session()->has('error'))
+                        <x-toast-error :message="session('error')"></x-toast-error>
+                    @elseif(session()->has('warning'))
+                        <x-toast-warning :message="session('warning')"></x-toast-warning>
+                    @endif
+
+                    {{ $slot }}
+                </div>
             </main>
         </div>
     </body>
