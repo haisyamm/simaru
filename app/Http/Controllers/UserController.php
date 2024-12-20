@@ -51,7 +51,7 @@ class UserController extends Controller
             return redirect()->route('users.index')
             ->with('success', 'User '.$user->name.' has been added successfully!');
         } catch (\Throwable $th) {
-            return back()->with(['error' => $th->getMessage()]);
+            return back()->with('error', $th->getMessage());
         }
     }
 
@@ -66,24 +66,48 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        //
+        return view('users.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|unique:users,email,'.$id,
+            'password' => 'required|string',
+            'password_confirmation' => 'required|same:password'
+        ]);
+
+        try {
+            $user = User::find($id);
+            // dd($user->first());
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->save();
+            return redirect()->route('users.index')
+            ->with('success', 'User '.$user->name.' has been updated successfully!');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        if ($user) {
+            $user->delete();
+            return redirect()->route('users.index')
+            ->with('success', 'User '.$user->name.' has been deleted successfully!');
+        } else {
+            return back()->with('error', 'User not found!');
+        }
     }
 }
