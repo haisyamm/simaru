@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('User Management') }}
+            {{ __('Room Management') }}
         </h2>
     </x-slot>
     <div class="py-12">
@@ -67,6 +67,9 @@
                                         <td class="px-6 py-2 text-center">
                                             {{ $item->category?->name }}
                                         </td>
+                                        <td class="px-6 py-2 text-center">
+                                            Rp. {{ number_format($item->price, 0, ',', '.') }}
+                                        </td>  
                                         <td class="px-6 py-2 text-center uppercase 
                                             @if ($item->status == 'draft') text-yellow-500 
                                             @elseif ($item->status == 'approved') text-green-500 
@@ -74,10 +77,7 @@
                                             @else text-gray-500 
                                             @endif">
                                             {{ $item->status }}
-                                        </td>
-                                        <td class="px-6 py-2 text-center">
-                                            Rp. {{ number_format($item->price, 0, ',', '.') }}
-                                        </td>                                        
+                                        </td>                                      
                                         <td class="px-6 py-2 text-center">
                                             <div class="inline-flex">
                                                 <form onsubmit="return confirm('Apakah Anda Yakin ?');"
