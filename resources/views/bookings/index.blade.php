@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('User Management') }}
+            {{ __('Booking Management') }}
         </h2>
     </x-slot>
     <div class="py-12">
@@ -10,13 +10,13 @@
                 <div class="mx-auto py-4 px-4 sm:px-6 lg:px-8 text-gray-900 dark:text-gray-100">
                     <div class="flex items-center justify-between py-5 mb-5">
                         <div class="md:mt-0 sm:flex-none w-72">
-                            <form action="{{ route('rooms.index') }}" method="GET">
+                            <form action="{{ route('bookings.index') }}" method="GET">
                                 <input type="text" name="search" placeholder="Type for search then enter"
                                     class="w-full relative inline-flex items-center px-4 py-2 font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:focus:border-blue-700 dark:active:bg-gray-700 dark:active:text-gray-300" />
                             </form>
                         </div>
                         <div class="sm:ml-16 sm:mt-0 sm:flex-none">
-                            <a type="button" href="{{ route('rooms.create') }}"
+                            <a type="button" href="{{ route('bookings.create') }}"
                                 class="relative inline-flex items-center px-4 py-2 font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:focus:border-blue-700 dark:active:bg-gray-700 dark:active:text-gray-300">
                                 Add New
                             </a>
@@ -31,19 +31,16 @@
                                         <span>NO</span>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-center">
-                                        <span>Name</span>
+                                        <span>Room</span>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-center">
-                                        <span>Capacity</span>
+                                        <span>Booking Date</span>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-center">
-                                        <span>Category</span>
+                                        <span>Booked By</span>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-center">
                                         <span>Price</span>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-center">
-                                        <span>Status</span>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-center">
                                         <span>Action</span>
@@ -51,7 +48,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($rooms as $item)
+                                @forelse($bookings as $item)
                                     <tr
                                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                         <td scope="row"
@@ -59,29 +56,21 @@
                                             {{ ++$i }}
                                         </td>
                                         <td class="px-6 py-2 text-center">
-                                            {{ $item->name }}
+                                            {{ $item->room?->name }}
                                         </td>
                                         <td class="px-6 py-2 text-center">
-                                            {{ $item->capacity }}
-                                        </td>
-                                        <td class="px-6 py-2 text-center">
-                                            {{ $item->category?->name }}
-                                        </td>
-                                        <td class="px-6 py-2 text-center uppercase 
-                                            @if ($item->status == 'draft') text-yellow-500 
-                                            @elseif ($item->status == 'approved') text-green-500 
-                                            @elseif ($item->status == 'rejected') text-red-500 
-                                            @else text-gray-500 
-                                            @endif">
-                                            {{ $item->status }}
-                                        </td>
-                                        <td class="px-6 py-2 text-center">
-                                            Rp. {{ number_format($item->price, 0, ',', '.') }}
+                                            {{ \Carbon\Carbon::parse($item->bookingDate)->setTimezone('Asia/Jakarta')->format('d F Y') }}
                                         </td>                                        
                                         <td class="px-6 py-2 text-center">
-                                            <div class="inline-flex">
+                                            {{ $item->by?->name }}
+                                        </td>
+                                        <td class="px-6 py-2 text-center">
+                                            Rp. {{ number_format($item->room?->price, 0, ',', '.') }}
+                                        </td>                                        
+                                        <td class="px-6 py-2 text-center">
+                                            {{-- <div class="inline-flex">
                                                 <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                                    action="{{ route('rooms.approve', $item->id) }}" method="POST">
+                                                    action="{{ route('bookings.approve', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <button type="submit"
@@ -91,16 +80,16 @@
                                             </div>
                                             <div class="inline-flex">
                                                 <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                                    action="{{ route('rooms.reject', $item->id) }}" method="POST">@csrf
+                                                    action="{{ route('bookings.reject', $item->id) }}" method="POST">@csrf
                                                     @method('PUT')
                                                     <button type="submit"
                                                         class="focus:outline-none text-white bg-orange-400 hover:bg-orange-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
                                                         Reject</button>
                                                 </form>
-                                            </div>
+                                            </div> --}}
                                             <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                                action="{{ route('rooms.destroy', $item->id) }}" method="POST">
-                                                <a href="{{ route('rooms.edit', $item->id) }}"
+                                                action="{{ route('bookings.destroy', $item->id) }}" method="POST">
+                                                <a href="{{ route('bookings.edit', $item->id) }}"
                                                     class="focus:outline-none text-gray-50 bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">EDIT</a>
                                                 @csrf
                                                 @method('DELETE')

@@ -15,7 +15,8 @@ class Room extends Model
         'userId',
         'image',
         'capacity',
-        'price'
+        'price',
+        'status'
 
     ];
 

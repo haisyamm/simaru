@@ -79,8 +79,8 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|unique:users,email,'.$id,
-            'password' => 'required|string',
-            'password_confirmation' => 'required|same:password'
+            // 'password' => 'required|string',
+            'password_confirmation' => 'nullable|same:password'
         ]);
 
         try {
@@ -88,7 +88,9 @@ class UserController extends Controller
             // dd($user->first());
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = Hash::make($request->password);
+            if ($request->password){
+                $user->password = Hash::make($request->password);
+            }
             $user->save();
             return redirect()->route('users.index')
             ->with('success', 'User '.$user->name.' has been updated successfully!');
