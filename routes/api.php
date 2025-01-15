@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\BookingController;
 use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\RoomController;
 use App\Http\Controllers\api\UserController;
@@ -16,4 +17,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('users', UserController::class);
     Route::resource('rooms', RoomController::class);
     Route::resource('categories', CategoryController::class);
+    Route::resource('bookings', BookingController::class);
 });

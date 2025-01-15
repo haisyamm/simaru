@@ -19,8 +19,7 @@ class BookingController extends Controller
     {
         $bookings = Booking::when(request()->search, function ($bookings) {
             $bookings = $bookings->where('name', 'like', '%' . request()->search . '%');
-            $bookings = $bookings->where('userId' , Auth::user()->id);
-        })->paginate(10);
+        })->where('userId' , Auth::user()->id)->paginate(10);
 
         return response()->json($bookings);
     }
