@@ -17,7 +17,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::when(request()->search, function ($bookings) {
+        $bookings = Booking::with('room')->when(request()->search, function ($bookings) {
             $bookings = $bookings->where('name', 'like', '%' . request()->search . '%');
         })->where('userId' , Auth::user()->id)->paginate(10);
 
@@ -71,7 +71,8 @@ class BookingController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $booking = Booking::find($id)->with('room')->first();
+        return response()->json($booking);
     }
 
     /**
