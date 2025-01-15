@@ -16,6 +16,9 @@ class RoomController extends Controller
     {
         $rooms = Room::with('category')->when(request()->search, function ($rooms) {
             $rooms = $rooms->where('name', 'like', '%' . request()->search . '%');
+            if(request()->status) {
+                $rooms = $rooms->where('status', request()->status);
+            }
         })->paginate(10);
 
         return response()->json($rooms);
